@@ -23,11 +23,11 @@ Inventory value: 155.4 EUR
 
 | Function | What it does | Author |
 |---|---|---|
-| `add_product` | Adds a new product | [Name 1] |
-| `search_products` | Finds products by code or name | [Name 2] |
-| `update_stock` | Adds or removes items from the stock | [Name 3] |
-| `list_low_stock` | Shows products that are running out | [Name 4] |
-| `calculate_inventory_value` | Calculates the value of the stock | [Name 5] |
+| `add_product` | Adds a new product | Alvaro |
+| `search_products` | Finds products by code or name | Otto |
+| `update_stock` | Adds or removes items from the stock | Althay |
+| `list_low_stock` | Shows products that are running out | Pablo |
+| `calculate_inventory_value` | Calculates the value of the stock | Ángel |
 
 ## License
 
