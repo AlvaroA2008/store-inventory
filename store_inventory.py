@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2026 <Team name / member names>
+# Copyright (c) 2026 Álvaro Antonio Sánchez Suárez, Otto Sánchez-Tembleque Meneses, Althay Sánchez González, Pablo Alexander Hernández García, Ángel Alfonso Arteaga Romero
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
