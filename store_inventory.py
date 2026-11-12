@@ -20,34 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Store Inventory: a small inventory manager for a shop.
+"""Store Inventory: a small inventory manager for a shop."""
 
-The inventory maps a product code to its data:
-    {"A1": {"name": "Notebook", "price": 2.5, "stock": 40}, ...}
-"""
-
-Inventory = dict[str, dict]
+Inventory = dict[str, dict[str, str | float | int]]
 
 
-# --- Member 1 ---------------------------------------------------------------
-def add_product(
-    inventory: Inventory, code: str, name: str, price: float, stock: int
-) -> dict:
+# --- Member 1: Álvaro Antonio Sánchez Suárez ---------------------------------
+def add_product(inventory: Inventory, code: str, name: str, price: float, stock: int) -> dict:
     """Add a new product to the inventory (modified in place).
+ 
     Args:
         inventory: Inventory to modify.
         code: Unique, non-empty product code (e.g. "A1").
         name: Product name.
         price: Unit price, 0 or more.
         stock: Initial units, 0 or more.
+ 
     Returns:
         The stored product as a dict.
+ 
     Raises:
         ValueError: Empty or repeated code, or negative price or stock.
+ 
     Example:
-        >>> inv = {}
-        >>> add_product(inv, "A1", "Notebook", 2.5, 40)
-        {'name': 'Notebook', 'price': 2.5, 'stock': 40}
+    inv = {}
+    add_product(inv, "A1", "Notebook", 2.5, 40)
+    {'name': 'Notebook', 'price': 2.5, 'stock': 40}
     """
     code = code.strip()
     if not code:
@@ -64,29 +62,38 @@ def add_product(
     return inventory[code]
 
 
-# --- Member 2 ---------------------------------------------------------------
-def search_products(inventory: Inventory, query: str) -> list[tuple[str, dict]]:
-    """Find products whose code or name contains the query (ignores case).
-    Args:
-        inventory: Inventory to search.
-        query: Text to look for, e.g. "pen".
-    Returns:
-        (code, product) pairs sorted by code; empty list if no match.
-    Example:
-        >>> inv = {"B2": {"name": "Pen", "price": 0.8, "stock": 3}}
-        >>> search_products(inv, "PEN")
-        [('B2', {'name': 'Pen', 'price': 0.8, 'stock': 3})]
+# --- Member 2: Otto Sánchez-Tembleque Meneses --------------------------------
+def search_product(inventory: list, product: str) -> list:
     """
-    text = query.strip().lower()
-    matches = [
-        (code, product)
-        for code, product in inventory.items()
-        if text in code.lower() or text in product["name"].lower()
-    ]
-    return sorted(matches, key=lambda item: item[0])
+    Search for a product in the inventory by name.
+    Args:
+        inventory (list): List of products. [product name (str), stock (int), price (float)        
+        product (str): Name of the product to search for.
+    Returns:
+        -> list: Product information [name, stock, price]
+        -> None: if the product is not in the inventory
+        
+    
+    Example:
+        inventory = [
+            ["Mouse", 10, 15.0],
+            ["Keyboard", 8, 30.0],
+            ["Monitor", 3, 120.0]
+        ]
+        
+        search_product(inventory, "Monitor") --> ["Monitor", 3, 120.0]
+        """
+    information = None  # if after the loop the product name is not found, return None
+    
+    for i in range(len(inventory)):
+        if inventory[i][0] == product:
+            information = inventory[i]
+            break  # stop when we find the product
+    
+    return information
 
 
-# --- Member 3 ---------------------------------------------------------------
+# --- Member 3: Althay Sánchez González ---------------------------------------
 def update_stock(inventory: Inventory, code: str, change: int) -> int:
     """Add (delivery) or remove (sale) units of a product (modified in place).
     Args:
@@ -99,9 +106,9 @@ def update_stock(inventory: Inventory, code: str, change: int) -> int:
         KeyError: Unknown product.
         ValueError: The new stock would be negative.
     Example:
-        >>> inv = {"B2": {"name": "Pen", "price": 0.8, "stock": 3}}
-        >>> update_stock(inv, "B2", 20)
-        23
+    inv = {"B2": {"name": "Pen", "price": 0.8, "stock": 3}}
+    update_stock(inv, "B2", 20)
+    23
     """
     if code not in inventory:
         raise KeyError(f"Unknown product: {code}")
@@ -112,53 +119,60 @@ def update_stock(inventory: Inventory, code: str, change: int) -> int:
     return new_stock
 
 
-# --- Member 4 ---------------------------------------------------------------
-def list_low_stock(
-    inventory: Inventory, threshold: int = 5
-) -> list[tuple[str, str, int]]:
-    """List products with `threshold` units or fewer.
+# --- Member 4: Pablo Alexander Hernández García ------------------------------
+def list_low_stock(inventory, threshold: int = 5):
+    """Returns a list of products with stock equal to or below the threshold.
     Args:
-        inventory: Inventory to check.
-        threshold: Maximum stock considered low (default 5).
+        inventory (dict): Dictionary containing the products.
+        threshold (int): Maximum stock to be considered low.
     Returns:
-        (code, name, stock) tuples sorted by code.
+        list: Products with their code, name and stock.
     Example:
-        >>> inv = {"A1": {"name": "Notebook", "price": 2.5, "stock": 4}}
-        >>> list_low_stock(inv, 5)
+        list_low_stock(inventory)
         [('A1', 'Notebook', 4)]
     """
-    low = [
-        (code, product["name"], product["stock"])
-        for code, product in inventory.items()
-        if product["stock"] <= threshold
-    ]
-    return sorted(low)
+    low_stock = []  # List to store products with low stock
+    for product_code in inventory:
+        product = inventory[product_code]  # Get product information
+        if product["stock"] <= threshold:  # Check if stock is lower than te threshold
+            low_stock.append((product_code, product["name"], product["stock"]))
+    return sorted(low_stock)  # Return the list sorted by product code
 
 
-# --- Member 5 ---------------------------------------------------------------
-def calculate_inventory_value(inventory: Inventory) -> float:
-    """Total value of the stock in EUR (sum of price * stock), 2 decimals.
+# --- Member 5: Ángel Alfonso Arteaga Romero ----------------------------------
+def total_value(inventory: Inventory) -> float:
+    """Calculate the total monetary value of all products in the inventory.
     Args:
-        inventory: Inventory to evaluate.
+        inventory: Inventory mapping product codes to their details.
     Returns:
-        The total value.
+        The total value as a float.
     Example:
-        >>> inv = {"A1": {"name": "Notebook", "price": 2.5, "stock": 4}}
-        >>> calculate_inventory_value(inv)
-        10.0
+        >>> inv = {
+        ...     "A1": {"name": "Apples", "price": 2.0, "stock": 10},
+        ...     "B2": {"name": "Bread", "price": 3.5, "stock": 4},
+        ... }
+        >>> total_value(inv)
+        34.0
     """
-    total = sum(p["price"] * p["stock"] for p in inventory.values())
-    return round(total, 2)
+    # Loop through each product's details (ignoring the product codes),
+    # multiply its price by its stock, and add all results together
+    return sum(product["price"] * product["stock"] for product in inventory.values())
 
 
 if __name__ == "__main__":
-    shop: Inventory = {}
-    add_product(shop, "A1", "Notebook", 2.50, 40)
-    add_product(shop, "B2", "Pen", 0.80, 3)
-    add_product(shop, "C3", "Backpack", 24.90, 5)
+    # Example inventory (from list_low_stock)
+    inventory = {
+        "A1": {"name": "Notebook", "price": 2.5, "stock": 4},
+        "A2": {"name": "Pencil", "price": 1.0, "stock": 10}
+    }
+    # Print products with low stock
+    print(list_low_stock(inventory))
 
-    print("Search 'pen':", search_products(shop, "pen"))
-    print("Pen stock after delivery:", update_stock(shop, "B2", 20))
-    print("Notebook stock after sales:", update_stock(shop, "A1", -35))
-    print("Low stock (<= 5):", list_low_stock(shop, 5))
-    print("Inventory value:", calculate_inventory_value(shop), "EUR")
+    # Demo of the other functions
+    add_product(inventory, "B2", "Pen", 0.80, 3)
+    print("Pen stock after delivery:", update_stock(inventory, "B2", 20))
+    print("Inventory value:", total_value(inventory), "EUR")
+
+    # search_product works with a list of lists, not with the dictionary
+    products = [["Mouse", 10, 15.0], ["Keyboard", 8, 30.0], ["Monitor", 3, 120.0]]
+    print("Search 'Monitor':", search_product(products, "Monitor"))
