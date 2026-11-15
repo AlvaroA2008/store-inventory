@@ -156,7 +156,7 @@ def total_value(inventory: Inventory) -> float:
     """
     # Loop through each product's details (ignoring the product codes),
     # multiply its price by its stock, and add all results together
-    return sum(product["price"] * product["stock"] for product in inventory.values())
+    return round(sum(product["price"] * product["stock"] for product in inventory.values()), 2)
 
 
 if __name__ == "__main__":
