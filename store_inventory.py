@@ -75,14 +75,11 @@ def search_product(inventory: Inventory, product: str) -> dict | None:
         >>> search_product(inv, "pen")
         {'name': 'Pen', 'price': 0.8, 'stock': 3}
     """
-    information = None  # if after the loop the product name is not found, return None
-
+    
     for code in inventory:
         if inventory[code]["name"].lower() == product.strip().lower():
-            information = inventory[code]
-            break  # stop when we find the product
-
-    return information
+            return inventory[code]
+    return None  # return None if the product name is not found
 
 
 # --- Member 3: Althay Sánchez González ---------------------------------------
